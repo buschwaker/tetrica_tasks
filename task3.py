@@ -1,25 +1,16 @@
-pupil = [1594663340, 1594663389, 1594663390, 1594663395, 1594663396, 1594666472]
-tutor = [1594663290, 1594663430, 1594663443, 1594666473]
-# tutor_in_out = [[second, 'in' if i % 2 == 0 else 'out'] for i, second in enumerate(tutor)]
-# student_in_out = [[second, 'in' if i % 2 == 0 else 'out'] for i, second in enumerate(pupil)]
-lesson = [1594663200, 1594666800]
+import logging
+import sys
 
-pupil_in_out_by_sec = []
-# tutor = [[1594663290, 1594663430, ], [1594663443, 1594666473]]
-# pupil = [[1594663340, 1594663389,], [1594663390, 1594663395] , [1594663396, 1594666472]]
+from core.exceptions import CriticalErrors
+from core.dummy_data import tests
 
-
-def check_sorted(a, ascending=True):
-    """Возвращает True, если последовательность отсортирована.
-    С помощью параметра ascending можно задать направление сортировки
-    """
-    flag = True
-    s = 2 * int(ascending) - 1
-    for i in range(0, len(a) - 1):
-        if s*a[i] > s*a[i+1]:
-            flag = False
-            break
-    return flag
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(stream=sys.stdout)
+handler.setFormatter(
+    logging.Formatter(fmt='[%(asctime)s: %(levelname)s] %(message)s')
+)
+logger.addHandler(handler)
 
 
 def if_even(a):
@@ -31,27 +22,22 @@ def split_into_pairs(a):
     """Разделяет последовательность на пары,
     упаковывая их в двухмерный массив"""
     if not if_even(len(a)):
-        return
-    if not check_sorted(a):
-        return
-    i = 0
+        raise CriticalErrors('Число входов и выходов пользователя различно!')
+    if not isinstance(a, list):
+        raise CriticalErrors('Неизвестный формат данных о посещении урока!')
+    q = 0
     some_list = []
     for j in range(int(len(a) / 2)):
-        some_list.append([a[i+j], a[i+j+1]])
-        i += 1
+        some_list.append([a[q+j], a[q+j+1]])
+        q += 1
     return some_list
 
 
-pupil = [[1594663340, 1594663389,], [1594663390, 1594663395] , [1594663396, 1594666472]]
-tutor = [[1594663290, 1594663430, ], [1594663443, 1594666473]]
-
-
 def interval_by_second(a, limit):
-    """"""
     seconds_online = set()
-    for i in range(len(a)):
-        for sec in range(a[i][0] if a[i][0] > limit[0] else limit[0],
-                         a[i][1] if a[i][1] < limit[1] else limit[1]):
+    for q in range(len(a)):
+        for sec in range(a[q][0] if a[q][0] > limit[0][0] else limit[0][0],
+                         a[q][1] if a[q][1] < limit[0][1] else limit[0][1]):
             seconds_online.add(sec)
     return seconds_online
 
@@ -61,8 +47,25 @@ def count_seconds_together(a, b):
     return len(interval_together)
 
 
-print(count_seconds_together(interval_by_second(pupil, lesson), interval_by_second(tutor, lesson)))
+def appearance(data):
+    """Основная логика работы программы."""
+    logger.info('Начало работы программы!')
+    try:
+        pair_lesson = split_into_pairs(data['lesson'])
+        pair_pupil = split_into_pairs(data['pupil'])
+        pair_tutor = split_into_pairs(data['tutor'])
+        tutor_time = interval_by_second(pair_tutor, pair_lesson)
+        pupil_time = interval_by_second(pair_pupil, pair_lesson)
+        return count_seconds_together(tutor_time, pupil_time)
+    except CriticalErrors as error:
+        logger.error(error)
 
-# print(split_into_pairs(tutor))
 
-
+if __name__ == '__main__':
+    for i, test in enumerate(tests):
+        test_answer = appearance(test['data'])
+        assert test_answer == test['answer'], (
+            f'Error on test case {i},'
+            f'got {test_answer}, expected {test["answer"]}'
+        )
+        logger.debug('Tecт пройден!')

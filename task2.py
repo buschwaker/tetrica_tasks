@@ -41,9 +41,13 @@ def retrieve_all_animals(article):
     cyrillic_str_upper = cyrillic_str_lower.upper()
     animals = {i: [] for i in cyrillic_str_upper}
     if not isinstance(article, wikipediaapi.WikipediaPage):
-        raise CriticalErrors('Неизвестный формат ответа при запросе к эндпоинту!')
+        raise CriticalErrors(
+            'Неизвестный формат ответа при запросе к эндпоинту!'
+        )
     if not isinstance(article.categorymembers, dict):
-        raise CriticalErrors('Под ключом categorymembers получен ответ неизвестного формата!')
+        raise CriticalErrors(
+            'Под ключом categorymembers получен ответ неизвестного формата!'
+        )
     logger.info('Получен валидный ответ!')
     animals_to_parse = article.categorymembers.values()
     for animal in animals_to_parse:
