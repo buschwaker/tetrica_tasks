@@ -18,8 +18,13 @@ def task(array: Union[str, List[float], List[str]], level: int = None,
     11
     >>> task([int(i) for i in dummy_data]) # список целых чисел
     11
+    >>> task("11121111111")
+    3
 
     """
+    if len(array) == 1:
+        print('Всего одна группа знаков!')
+        return None
     if len(array) == 0:
         print('Пустой массив')
         return None

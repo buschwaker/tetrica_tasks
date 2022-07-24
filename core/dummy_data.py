@@ -1,4 +1,6 @@
-tests = [
+from typing import Dict, List, Union
+
+tests: List[Dict[str, Union[int, Dict[str, List[int]]]]] = [
     {'data': {
         'lesson': [1594663200, 1594666800],
         'pupil': [
