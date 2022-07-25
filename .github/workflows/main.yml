@@ -25,19 +25,14 @@ jobs:
         python -m unittest
     - name: Test tasks with flake8 and mypy
       run: |
-        # переход в директорию tasks
-        cd tasks
         # запуск проверки проекта по flake8
-        flake8 task1.py task2.py task3.py
+        flake8 tasks/task1.py tasks/task2.py tasks/task3.py
         # запуск проверки проекта по mypy
-        mypy task1.py task2.py task3.py
-        cd ..
+        mypy tasks/task1.py tasks/task2.py tasks/task3.py
     - name: Test tests with flake8
       run: |
-        # переход в директорию tests
-        cd tests
         # запуск проверки проекта по flake8
-        flake8 test1.py test2.py test3.py
+        flake8 tests/test1.py tests/test2.py tests/test3.py
   send_message:
     runs-on: ubuntu-latest
     needs: tests
