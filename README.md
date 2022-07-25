@@ -1,4 +1,4 @@
-![example workflow](https://github.com/buschwaker/wargaming/actions/workflows/main.yml/badge.svg)
+![example workflow](https://github.com/buschwaker/tetrica_tasks/blob/main/.github/workflows/main.yml/badge.svg)
 
 # Тестовое задание на позицию Junior Python Developer
 
