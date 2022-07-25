@@ -4,8 +4,10 @@ from typing import Union, Optional, List
 def task(array: Union[str, List[float], List[str]], level: int = None,
          first_group_num: Union[float, str] = None) -> Optional[int]:
     """Функция, принимает последовательность
-    состоящей из двух групп единиц и нулей
+    состоящей из двух групп единиц и нулей(в общем случае любых знаков)
     возвращает индекс последнего элемента группы
+
+    Сложность: O(N), где N - длина последовательности array
 
     >>> dummy_data = "111111111110000000000000000"
     >>> task(dummy_data)
@@ -18,8 +20,8 @@ def task(array: Union[str, List[float], List[str]], level: int = None,
     11
     >>> task([int(i) for i in dummy_data]) # список целых чисел
     11
-    >>> task("11121111111")
-    3
+    >>> task("1111111111")
+    Всего одна группа знаков!
 
     """
     if len(array) == 1:
